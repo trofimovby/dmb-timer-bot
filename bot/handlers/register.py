@@ -5,6 +5,7 @@ from aiogram import types
 from aiogram.dispatcher import FSMContext
 
 from bot.keyboards.register_kb import role_kb, discharge_kb
+from bot.keyboards.menu_kb import main_menu_kb
 from bot.states import RegisterStates
 from bot.database.models import User
 from bot.database.db import SessionLocal
@@ -40,12 +41,12 @@ async def start_register(message: types.Message, state: FSMContext):
 async def set_role(message: types.Message, state: FSMContext):
     if message.text == "❌ Отмена":
         await state.finish()
-        await message.answer("Регистрация отменена.", reply_markup=types.ReplyKeyboardRemove())
+        await message.answer("Регистрация отменена.", reply_markup=main_menu_kb())
         return
 
     if message.text == "🔄 Обновить":
         await message.answer("Кто проходит службу?", reply_markup=role_kb())
-        return  # оставляем состояние RegisterStates.role
+        return  # остаёмся в RegisterStates.role
 
     await state.update_data(role=message.text)
     await message.answer("Введите дату призыва в формате дд.мм.гггг", reply_markup=types.ReplyKeyboardRemove())
@@ -117,7 +118,7 @@ async def save_user(message: types.Message, state: FSMContext, discharge_date: d
             logger.info(f"Добавлен новый пользователь {telegram_id}")
 
         session.commit()
-        await message.answer(f"Дембель назначен на: {discharge_date.strftime('%d.%m.%Y')}")
+        await message.answer(f"Дембель назначен на: {discharge_date.strftime('%d.%m.%Y')}", reply_markup=main_menu_kb())
         await state.finish()
 
     except Exception:

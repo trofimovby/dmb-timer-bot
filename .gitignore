@@ -1,18 +1,25 @@
-# Виртуальное окружение
-venv/
-
-# Python-кэш
+# Python
 __pycache__/
 *.py[cod]
+*.egg
+*.egg-info/
+dist/
+build/
+env/
+.venv/
+*.sqlite3
 
-# Файлы конфигурации и секретов
+# Environments
 .env
+.envrc
 
-# IDE
+# IDEs
 .idea/
 .vscode/
 
-# Операционная система
-.DS_Store
-Thumbs.db
+# Alembic
+alembic/__pycache__/
+alembic/versions/__pycache__/
 
+# Logs
+*.log

@@ -1,4 +1,3 @@
-version: "3.9"
 
 services:
   db:
@@ -12,6 +11,41 @@ services:
       POSTGRES_PASSWORD: supersecret
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
+  alembic:
+    build: .
+    command: alembic upgrade head
+    depends_on:
+      - db
+    environment:
+      BOT_TOKEN: ${BOT_TOKEN}
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: dmb_timer
+      DB_USER: bot_user
+      DB_PASSWORD: supersecret
+      DATABASE_URL: postgresql+psycopg2://bot_user:supersecret@db:5432/dmb_timer
+    volumes:
+      - .:/app
+    working_dir: /app
+
+  bot:
+    build: .
+    command: python bot/main.py
+    depends_on:
+      - db
+    environment:
+      BOT_TOKEN: ${BOT_TOKEN}
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: dmb_timer
+      DB_USER: bot_user
+      DB_PASSWORD: supersecret
+      DATABASE_URL: postgresql+psycopg2://bot_user:supersecret@db:5432/dmb_timer
+    volumes:
+      - .:/app
+    working_dir: /app
+    restart: always
 
 volumes:
   postgres_data:

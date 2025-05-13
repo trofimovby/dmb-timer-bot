@@ -1,13 +1,20 @@
+import sys
 import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 import logging
 from dotenv import load_dotenv
 from aiogram import Bot, Dispatcher, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher import FSMContext
-from aiogram.dispatcher.filters import Command
 import aiocron
 
 from services.notifier import send_daily_notifications, send_test_notification
+from bot.handlers.register import (
+    start_register, set_role, set_enlist_date, choose_discharge, set_custom_discharge
+)
+from bot.handlers.menu import handle_menu_choice, handle_notify_callback
+from bot.states import RegisterStates
 
 # === Настройка логгирования ===
 logging.basicConfig(
@@ -23,12 +30,10 @@ bot = Bot(token=os.getenv("BOT_TOKEN"))
 dp = Dispatcher(bot, storage=MemoryStorage())
 bot["dispatcher"] = dp
 
-# === Импорт хендлеров и состояний ===
-from bot.handlers.register import (
-    start_register, set_role, set_enlist_date, choose_discharge, set_custom_discharge
-)
-from bot.handlers.menu import handle_menu_choice, handle_notify_callback
-from bot.states import RegisterStates
+# === Админка ===
+from bot.handlers.admin import register_admin_handlers
+register_admin_handlers(dp)
+
 
 # === FSM регистрация ===
 dp.register_message_handler(set_role, state=RegisterStates.role)
@@ -36,8 +41,7 @@ dp.register_message_handler(set_enlist_date, state=RegisterStates.enlist_date)
 dp.register_message_handler(choose_discharge, state=RegisterStates.discharge_choice)
 dp.register_message_handler(set_custom_discharge, state=RegisterStates.discharge_custom)
 
-# === Команды (регистрировать раньше общего хендлера) ===
-
+# === Команды ===
 @dp.message_handler(commands=["start"], state="*")
 async def handle_start(message: types.Message, state: FSMContext):
     await start_register(message, state)
@@ -64,7 +68,7 @@ async def handle_update_data(message: types.Message, state: FSMContext):
 # === Callback-кнопки (настройки подписки) ===
 dp.register_callback_query_handler(handle_notify_callback, lambda c: c.data.startswith("set_notify_"))
 
-# === Главное меню (после всех команд!) ===
+# === Главное меню ===
 dp.register_message_handler(handle_menu_choice, state="*")
 
 # === Фоновая задача: ежедневная рассылка в 09:00 ===

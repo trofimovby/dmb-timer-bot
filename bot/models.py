@@ -13,5 +13,5 @@ class User(Base):
     enlist_date = Column(Date)
     discharge_date = Column(Date)
 
-    is_subscribed = Column(Boolean, default=False)  # Подписан ли на напоминания
+    is_subscribed = Column(Boolean, default=True, nullable=False)
     notify_mode = Column(String, default="key_dates")  # 'key_dates' или 'weekly'

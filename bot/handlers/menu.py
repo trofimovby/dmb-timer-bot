@@ -2,7 +2,7 @@ from aiogram import types
 from datetime import date, datetime
 
 from bot.database.db import SessionLocal
-from bot.database.models import User
+from bot.models import User
 from bot.keyboards.subscribe_kb import subscription_modes_kb
 from services.notifier import get_quote
 

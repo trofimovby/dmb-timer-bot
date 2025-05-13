@@ -5,7 +5,7 @@ from datetime import datetime
 from pathlib import Path
 from aiogram import Bot
 
-from bot.database.models import User
+from bot.models import User
 from bot.database.db import SessionLocal
 
 logger = logging.getLogger(__name__)

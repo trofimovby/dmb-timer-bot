@@ -1,6 +1,6 @@
 # init_db.py (в корне dmb-timer-bot)
 
-from bot.database.models import Base
+from bot.models import Base
 from bot.database.db import engine
 
 Base.metadata.create_all(bind=engine)

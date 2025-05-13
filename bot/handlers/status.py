@@ -3,7 +3,7 @@ from aiogram import types
 from datetime import date
 
 from bot.database.db import SessionLocal
-from bot.database.models import User
+from bot.models import User
 
 logger = logging.getLogger(__name__)
 

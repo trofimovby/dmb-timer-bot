@@ -7,7 +7,7 @@ from aiogram.dispatcher import FSMContext
 from bot.keyboards.register_kb import role_kb, discharge_kb
 from bot.keyboards.menu_kb import main_menu_kb
 from bot.states import RegisterStates
-from bot.database.models import User
+from bot.models import User
 from bot.database.db import SessionLocal
 
 logger = logging.getLogger(__name__)
@@ -75,7 +75,7 @@ async def choose_discharge(message: types.Message, state: FSMContext):
     }
 
     if message.text in discharge_map:
-        discharge_date = enlist_date + discharge_map[message.text]
+        discharge_date = enlist_date + discharge_map[message.text] - timedelta(days=1)  # 👈 Вот здесь поправка
         await save_user(message, state, discharge_date)
     elif message.text == "✍️ Свой вариант":
         await message.answer("Введите дату дембеля в формате дд.мм.гггг")

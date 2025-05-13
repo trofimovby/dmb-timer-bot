@@ -16,7 +16,7 @@ fileConfig(config.config_file_name)
 config.set_main_option("sqlalchemy.url", os.getenv("DATABASE_URL"))
 
 # Импортируем модели
-from bot.database.models import Base
+from bot.models import Base
 target_metadata = Base.metadata
 
 

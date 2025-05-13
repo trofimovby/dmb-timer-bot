@@ -137,6 +137,7 @@ dmb-timer-bot/
 ## 📞 **Контакты**
 
 Автор: **Саша Трофимов**  
-Telegram: [t.me/trofimovby](mailto:t.me/trofimovby)
+Telegram: [t.me/trofimovby](https://t.me/trofimovby)
+
 
 ---
